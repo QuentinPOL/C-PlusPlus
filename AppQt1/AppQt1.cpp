@@ -3,31 +3,56 @@
 
 #include <qdebug.h>
 
-AppQt1::AppQt1(QWidget *parent)
+AppQt1::AppQt1(QWidget *parent) // Constructeur
 	: QMainWindow(parent)
 {
 	ui.setupUi(this);
+	socket = new QTcpSocket(this); // Creation du socket
+	QObject::connect(socket, SIGNAL(connected()), this, SLOT(onSocketConnected()));
+	QObject::connect(socket, SIGNAL(disconnected()), this, SLOT(onSocketDisconnected()));
 }
 
-AppQt1::~AppQt1()
+AppQt1::~AppQt1() // Destructeur
 {
-	delete pile; // Suppresion de la pile
+	delete socket;
 }
 
-void AppQt1::onDisplayMessageButtonClicked()
+void AppQt1::onDisplayMessageButtonClicked() // Bouton de connexion
 {
+	QString ip = ui.valueEdit->text(); // Recupere l'IP
+	QString port = ui.valueEdit_2->text(); // Recupere le Port
 
-	QRegExp re("\\d*");  // a digit (\d), zero or more times (*)
-
-	if (re.exactMatch(ui.valueEdit->text())) // Si entier
+	// Conversion du port de string en int
+	bool ok;
+	int portAsInt = port.toInt(&ok);
+	if (ok) // si la conversion en entier a réussie
 	{
-		int val = ui.valueEdit->text().toInt(); // Valeur qu'on converti en entier
-		pile = new pile_entier(val); // Créationde la pile d'une taille valeur
-
-		ui.label->setText("Pile creer !"); // Message de succés lorsque la pilce est créer
+		// Tentative de connexion au serveur
+		socket->connectToHost(ip, portAsInt); 
 	}
 }
 
+void AppQt1::onSocketConnected()
+{
+	ui.label_status->setText("Status connexion : Connecter");
+}
+
+void AppQt1::onSocketDisconnected()
+{
+	ui.label_status->setText("Status connexion : Déconnecter");
+}
+
+void AppQt1::OnSendMessageButtonClicked()
+{
+	socket->write("Salut mec !\n");
+
+	if (socket->state() == QTcpSocket::ConnectedState)
+	{
+		socket->write("Salut mec !!!\n");
+	}
+}
+
+/*
 void AppQt1::DisplayMessageEmpiler()
 {
 	QRegExp re("\\d*");  // a digit (\d), zero or more times (*)
@@ -46,23 +71,4 @@ void AppQt1::DisplayMessageEmpiler()
 		}
 	}
 }
-
-void AppQt1::DisplayMessageDepiler()
-{
-	int lastCase = pile->depile(); // On dépile et on renvoie la valeur de la dernière case de la pile sinon on renvoie 0
-
-	if (lastCase != 0)
-	{
-		ui.label->setText(QString("La derniere case = %1").arg(lastCase)); // Renvoie la valeur de la dernière case et diminue de 1 la hauteur après
-	}
-	else if (lastCase == 0)
-	{
-		ui.label->setText("Erreur : La pile est vide"); // Message d'erreur quand la pile est vide
-	}
-}
-
-void AppQt1::DisplayMessageSupprimer()
-{
-	delete pile;
-	ui.label->setText("Pile supprimer !"); // Message d'erreur quand la pile est vide
-}
+*/
