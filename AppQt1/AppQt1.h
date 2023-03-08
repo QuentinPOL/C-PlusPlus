@@ -2,7 +2,7 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_AppQt1.h"
-#include "pile.h"
+#include "qtcpsocket.h"
 
 class AppQt1 : public QMainWindow
 {
@@ -14,14 +14,11 @@ public:
 
 private:
 	Ui::AppQt1Class ui;
-	pile_entier * pile;
+	QTcpSocket * socket; // Socket pour la connexion TCP/IP
 
 public slots:
-	void onDisplayMessageButtonClicked(); // Création de la pile
-
-	void DisplayMessageEmpiler(); // Empiler la pile
-
-	void DisplayMessageDepiler(); // Dépiler la pile
-
-	void DisplayMessageSupprimer(); // Supprimer la pile
+	void onDisplayMessageButtonClicked(); // Bouton de connexion
+	void onSocketConnected(); // Connexion Status
+	void onSocketDisconnected(); // Déconnexion Status
+	void OnSendMessageButtonClicked(); // Envoie Message Serveur
 };
