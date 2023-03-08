@@ -1,0 +1,7 @@
+﻿  rcc TCPIPQT.qrc
+   RCC: Warning: No resources in 'C:\Users\qpollet\source\repos\TCPIPQT\TCPIPQT\TCPIPQT.qrc'.
+  TCPIPQT.cpp
+  main.cpp
+  moc_TCPIPQT.cpp
+  qrc_TCPIPQT.cpp
+  TCPIPQT.vcxproj -> C:\Users\qpollet\source\repos\TCPIPQT\x64\Debug\TCPIPQT.exe
